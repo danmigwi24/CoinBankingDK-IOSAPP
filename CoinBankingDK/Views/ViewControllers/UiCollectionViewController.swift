@@ -14,7 +14,7 @@ struct UiCollectionViewControllerRepresentable: UIViewControllerRepresentable {
         let vc = UiCollectionViewController()
         return vc
     }
-
+    
     func updateUIViewController(_ uiViewController: UiCollectionViewController, context: Context) {
         
     }
@@ -22,19 +22,24 @@ struct UiCollectionViewControllerRepresentable: UIViewControllerRepresentable {
 
 
 
-class UiCollectionViewController: UIViewController,UICollectionViewDataSource,UICollectionViewDelegate {
+class UiCollectionViewController: UIViewController,UICollectionViewDataSource,UICollectionViewDelegate,UICollectionViewDelegateFlowLayout {
     
     
     //let cats: [String] = ["🐱", "🐱‍🐉", "🐈"]
-    private let items = ["Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6"]
+    private let items = sampleItems//["Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6"]
     
+    // MARK: - UI Components
     lazy var collectionView: UICollectionView = {
-        //
         let layout = UICollectionViewFlowLayout()
-        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        view.translatesAutoresizingMaskIntoConstraints = false
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 10    // Vertical spacing between rows
+        layout.minimumInteritemSpacing = 10   // Horizontal spacing between cells
         
-        return view
+        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        collectionView.backgroundColor = .systemBackground
+        collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: "CustomCollectionViewCell")
+        return collectionView
     }()
     
     
@@ -45,31 +50,20 @@ class UiCollectionViewController: UIViewController,UICollectionViewDataSource,UI
         //
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: "CustomCollectionViewCell")
         
         
     }
     
     // MARK: - UI Setup
     private func setupUI() {
-        view.backgroundColor = .systemBlue
+        view.backgroundColor = .white
         view.addSubview(collectionView)
-        // Either use this syntax:
-        /*
-        NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: view.topAnchor),
-            collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-        */
-        // OR this syntax (but not both):
-        ///*
-         collectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-         //*/
+        //
+        collectionView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor,constant: 10).isActive = true
+        collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor,constant: -10).isActive = true
+        collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        //
     }
     
     
@@ -85,7 +79,7 @@ class UiCollectionViewController: UIViewController,UICollectionViewDataSource,UI
             return UICollectionViewCell()
         }
         
-        cell.configure(with: items[indexPath.row])
+        cell.configure(with: items[indexPath.row].title)
         //cell.titleLabel.text = "\(indexPath.row)"
         return cell
     }
@@ -94,8 +88,15 @@ class UiCollectionViewController: UIViewController,UICollectionViewDataSource,UI
         print("Selected: \(items[indexPath.row])")
     }
     
-   func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-       return CGSize(width: view.frame.width/2 - 20, height: 250)
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        // Calculate available width (subtracting left/right insets and interitem spacing)
+        let totalHorizontalSpacing: CGFloat = 16 * 2 + 10   // leading+trailing insets + interitem spacing
+        let availableWidth = collectionView.bounds.width - totalHorizontalSpacing
+        let cellWidth = availableWidth / 2   // Divide by number of columns (2)
+        
+        // return CGSize(width: cellWidth, height: 120)  // Fixed height (adjust as needed)
+        return CGSize(width: view.frame.width/2 - 20, height: 250)
     }
     
 }
@@ -105,7 +106,7 @@ class UiCollectionViewController: UIViewController,UICollectionViewDataSource,UI
 final class CustomCollectionViewCell: UICollectionViewCell {
     
     // MARK: - UI Components
-     let titleLabel: UILabel = {
+    let titleLabel: UILabel = {
         let view = UILabel()
         view.textAlignment = .center
         view.textColor = .white
@@ -147,12 +148,12 @@ final class CustomCollectionViewCell: UICollectionViewCell {
         ])
         
         /*
-        NSLayoutConstraint.activate([
-            imageView.topAnchor.constraint(equalTo: topAnchor),
-            imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            imageView.bottomAnchor.constraint(equalTo: bottomAnchor)
-        ])
+         NSLayoutConstraint.activate([
+         imageView.topAnchor.constraint(equalTo: topAnchor),
+         imageView.leadingAnchor.constraint(equalTo: leadingAnchor),
+         imageView.trailingAnchor.constraint(equalTo: trailingAnchor),
+         imageView.bottomAnchor.constraint(equalTo: bottomAnchor)
+         ])
          */
     }
     
@@ -166,4 +167,6 @@ final class CustomCollectionViewCell: UICollectionViewCell {
         titleLabel.text = model.title
     }
 }
+
+
 
