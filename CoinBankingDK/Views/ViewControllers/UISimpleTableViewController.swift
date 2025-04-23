@@ -1,5 +1,5 @@
 //
-//  UiTableViewController.swift
+//  UiSimpleTableViewController.swift
 //  CoinBankingDK
 //
 //  Created by Daniel Kimani on 24/04/2025.
@@ -7,25 +7,25 @@
 import UIKit
 import SwiftUI
 
-struct UiTableViewControllerRepresentable: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> UiTableViewController {
-        let vc = UiTableViewController()
+struct UiSimpleTableViewControllerRepresentable: UIViewControllerRepresentable {
+    func makeUIViewController(context: Context) -> UiSimpleTableViewController {
+        let vc = UiSimpleTableViewController()
         return vc
     }
     
-    func updateUIViewController(_ uiViewController: UiTableViewController, context: Context) {
+    func updateUIViewController(_ uiViewController: UiSimpleTableViewController, context: Context) {
         
     }
 }
 
-class UiTableViewController: UIViewController {
+class UiSimpleTableViewController: UIViewController {
     
     private var items = sampleItems//["Item 1", "Item 2", "Item 3", "Item 4", "Item 5", "Item 6", "Item 7", "Item 8", "Item 9", "Item 10"]
     
     // Lazy-initialized UITableView
     lazy var tableViewColle: UITableView = {
         let view = UITableView()
-        view.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomTableViewCell")
+        view.register(CustomTableViewCell.self, forCellReuseIdentifier: "CustomSimpleTableViewCell")
         view.rowHeight = 80 // Set default row height
         view.separatorStyle = .none // Remove default separators
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -54,16 +54,16 @@ class UiTableViewController: UIViewController {
 }
 
 // MARK: - UITableViewDataSource & UITableViewDelegate
-extension UiTableViewController: UITableViewDataSource, UITableViewDelegate {
+extension UiSimpleTableViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return items.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(
-            withIdentifier: "CustomTableViewCell",
+            withIdentifier: "CustomSimpleTableViewCell",
             for: indexPath
-        ) as? CustomTableViewCell else {
+        ) as? CustomSimpleTableViewCell else {
             return UITableViewCell()
         }
         
@@ -143,7 +143,7 @@ extension UiTableViewController {
 
 
 
-final class CustomTableViewCell: UITableViewCell {
+final class CustomSimpleTableViewCell: UITableViewCell {
     //
     private let titleLabel: UILabel = {
         let view = UILabel()

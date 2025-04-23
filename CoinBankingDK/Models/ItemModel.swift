@@ -7,6 +7,12 @@
 
 import Foundation
 
+enum AnimalCategory: String, CaseIterable, Codable {
+    case bird
+    case other
+}
+
+
 struct ItemModel: Identifiable {
     let id: UUID = UUID()
     var title: String
@@ -14,6 +20,7 @@ struct ItemModel: Identifiable {
     var count: Int
     var imageName: String
     var isFavorite: Bool
+    var category: AnimalCategory = .other
 }
 
 
@@ -52,5 +59,37 @@ let sampleItems: [ItemModel] = [
         count: 7,
         imageName: "sparkles",
         isFavorite: false
+    ),
+    ItemModel(
+        title: "Parrot",
+        description: "A colorful bird that mimics human speech.",
+        count: 15,
+        imageName: "bird.fill",
+        isFavorite: true,
+        category: .bird
+    ),
+    ItemModel(
+        title: "Eagle",
+        description: "A majestic bird of prey with sharp eyesight.",
+        count: 4,
+        imageName: "eagle",
+        isFavorite: false,
+        category: .bird
+    ),
+    ItemModel(
+        title: "Tiger",
+        description: "A large carnivorous feline native to Asia.",
+        count: 3,
+        imageName: "pawprint.fill",
+        isFavorite: false,
+        category: .other
+    ),
+    ItemModel(
+        title: "Elephant",
+        description: "The largest land animal, known for its memory.",
+        count: 2,
+        imageName: "elephant",
+        isFavorite: true,
+        category: .other
     )
 ]
